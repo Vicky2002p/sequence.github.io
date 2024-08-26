@@ -1,6 +1,25 @@
+document.getElementById('jacks').addEventListener('click', function(event) {
+    const popover = document.querySelector('.popover');
+    const button = this;
+
+    // Toggle the popover visibility
+    popover.classList.toggle('visible');
+
+    // Calculate the position of the popover relative to the button
+    const rect = button.getBoundingClientRect();
+
+    // Center the popover below the button
+    const popoverWidth = popover.offsetWidth;
+    popover.style.top = `${rect.top + window.scrollY + button.offsetHeight}px`; // Below the button
+    popover.style.left = `${rect.left + window.scrollX + (rect.width / 2) - (popoverWidth / 2)}px`; // Aligns with the left side of the button
+});
+
+
 const board = document.querySelector('table');
 const rows = 10;
 const cols = 10;
+
+const startGameButton = document.getElementById('start-game');
 
 // List of all card files
 const cardFiles = [
@@ -21,11 +40,38 @@ const cardFiles = [
 // Joker card file
 const jokerFile = "joker.svg";
 
-// Duplicate each card so that each can appear twice
-let allCards = [];
-cardFiles.forEach(card => {
-    allCards.push(card, card); // Add each card twice
-});
+// Variable to keep track of the current turn
+let currentPlayer = 'blue'; // Start with red player
+
+// Function to start the game
+function startGame() {
+    initializeBoard();
+}
+
+function initializeBoard() {
+    let allCards = [];
+    cardFiles.forEach(card => {
+        allCards.push(card, card); // Add each card twice
+    });
+
+    allCards = shuffle(allCards);
+
+    // Create a 2D array to keep track of placed cards
+    let placedCards = Array.from({ length: rows }, () => Array(cols).fill(null));
+
+    // Initialize the table rows
+    board.innerHTML = ''; // Clear the board before initializing
+    for (let i = 0; i < rows; i++) {
+        const row = document.createElement('tr');
+        board.appendChild(row);
+        for (let j = 0; j < cols; j++) {
+            placeCard(i, j, allCards, placedCards);
+        }
+    }
+
+    // Add click events to cells
+    addCellClickEvents();
+}
 
 // Shuffle the cards
 function shuffle(array) {
@@ -36,25 +82,11 @@ function shuffle(array) {
     return array;
 }
 
-allCards = shuffle(allCards);
+// Function to place a card in a cell
+function placeCard(i, j, allCards, placedCards) {
+    const cell = document.createElement('td');
+    const img = document.createElement('img');
 
-// Create a 2D array to keep track of placed cards for adjacency checks
-let placedCards = Array.from({ length: rows }, () => Array(cols).fill(null));
-
-// Function to get adjacent card names
-function getAdjacentCards(i, j) {
-    let adjacent = [];
-    if (j > 0 && placedCards[i][j - 1] !== null) { // Left
-        adjacent.push(placedCards[i][j - 1]);
-    }
-    if (i > 0 && placedCards[i - 1][j] !== null) { // Above
-        adjacent.push(placedCards[i - 1][j]);
-    }
-    return adjacent;
-}
-
-// Function to place a card in a cell with constraints
-function placeCard(i, j) {
     // Check if the cell is a corner
     if (
         (i === 0 && j === 0) ||
@@ -63,81 +95,70 @@ function placeCard(i, j) {
         (i === rows - 1 && j === cols - 1)
     ) {
         // Place Joker
-        const cell = document.createElement('td');
-        const img = document.createElement('img');
         img.src = `img/${jokerFile}`;
         img.alt = jokerFile;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        cell.appendChild(img);
-        board.rows[i].appendChild(cell);
         placedCards[i][j] = jokerFile;
     } else {
-        // Get adjacent cards
-        const adjacentCards = getAdjacentCards(i, j);
-
-        // Filter valid cards
-        const validCards = allCards.filter(card => !adjacentCards.includes(card));
-
-        if (validCards.length === 0) {
-            // No valid card found, relax adjacency constraints or handle differently
-            // For simplicity, we'll allow any card
-            var selectedCard = allCards.pop();
-        } else {
-            // Select a random valid card
-            const randomIndex = Math.floor(Math.random() * validCards.length);
-            var selectedCard = validCards[randomIndex];
-
-            // Remove the selected card from allCards
-            const cardIndex = allCards.indexOf(selectedCard);
-            if (cardIndex > -1) {
-                allCards.splice(cardIndex, 1);
-            }
-        }
-
-        // Place the selected card
-        const cell = document.createElement('td');
-        const img = document.createElement('img');
+        const selectedCard = allCards.pop();
         img.src = `img/${selectedCard}`;
         img.alt = selectedCard;
-        img.style.width = '100%';
-        img.style.height = '100%';
-        cell.appendChild(img);
-        board.rows[i].appendChild(cell);
         placedCards[i][j] = selectedCard;
     }
+
+    img.style.width = '100%';
+    img.style.height = '100%';
+    cell.appendChild(img);
+    board.rows[i].appendChild(cell);
 }
 
-// Initialize the table rows
-for (let i = 0; i < rows; i++) {
-    const row = document.createElement('tr');
-    board.appendChild(row);
-    for (let j = 0; j < cols; j++) {
-        placeCard(i, j);
-    }
-}
+// Add click events to table cells
+function addCellClickEvents() {
+    const cells = document.querySelectorAll('td');
 
-const cells = document.querySelectorAll('td');
+    cells.forEach(cell => {
+        cell.addEventListener('click', function () {
+            // Check if the cell already has a circle
+            const existingCircle = cell.querySelector('.circle');
+            const cellImg = cell.querySelector('img');
 
-cells.forEach(cell => {
-    cell.addEventListener('click', function() {
-        // Check if the cell already has a circle
-        const existingCircle = cell.querySelector('.circle');
-        
-        if (existingCircle) {
-            // If there's an existing circle, remove it and reset the background color
-            existingCircle.remove();
-            cell.style.backgroundColor = ''; // Reset to original color
-        } else {
-            // If no circle exists, change the background color to red
-            cell.style.backgroundColor = 'red';
+            // Ignore clicks on Joker cards
+            if (cellImg.alt === jokerFile) {
+                return;
+            }
 
-            // Create a new circle element
-            const circle = document.createElement('div');
-            circle.classList.add('circle');
+            // Check if the cell already has a circle with the current player's color
+            if (existingCircle && existingCircle.style.backgroundColor === currentPlayer) {
+                // If the circle is already the same color as the current player, ignore the click
+                return;
+            }
+            
+            if (existingCircle) {
+                // If there's an existing circle, remove it and reset the background color
+                existingCircle.remove();
+                cell.style.backgroundColor = ''; // Reset to original color
+                
+                // Toggle the current player for the next turn
+                currentPlayer = (currentPlayer === 'blue') ? 'lightgreen' : 'blue';
+            } else {
+                // Change the background color based on the current player
+                cell.style.backgroundColor = currentPlayer;
 
-            // Append the circle to the cell
-            cell.appendChild(circle);
-        }
+                // Create a new circle element
+                const circle = document.createElement('div');
+                circle.classList.add('circle');
+
+                // Set the circle's background color to the current player's color
+                circle.style.backgroundColor = currentPlayer;
+
+                // Append the circle to the cell
+                cell.appendChild(circle);
+
+                // Toggle the current player for the next turn
+                currentPlayer = (currentPlayer === 'blue') ? 'lightgreen' : 'blue';
+            }
+        });
     });
-});
+}
+
+// Attach event listener to the Start Game button
+startGameButton.addEventListener('click', startGame);
