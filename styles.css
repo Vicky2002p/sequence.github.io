@@ -2,17 +2,22 @@ body {
     overflow: auto;
     margin: 0;
     padding: 0;
+    background-color: #ffffff;
 }
 .game {
     width: 100%;
     height: 100%;
     margin-bottom: 2em;
 }
+
 h1{
-    padding: 0em;
+    padding: 0.2em;
+    border-radius: 0em 0em 0 0;
     margin: 0em;
     font-size: 5em;
     text-align: center;
+    color:azure;
+    background-color: #040404;
 }
 
 .jack {
@@ -22,10 +27,31 @@ h1{
     margin-bottom: 1em; /* Adjust the spacing below the button */
 }
 
+.jack button{
+    transition: transform 0.3s ease;
+    font-size: 1.2em;
+    border-radius: 0.5em;
+    padding: 0.5em 1em;
+}
+.rules {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em; /* Adjust the spacing below the button */
+}
+
+.rules button{
+    transition: transform 0.3s ease;
+    font-size: 1.2em;
+    padding: 0.5em 1em;
+    border-radius: 0.5em;
+}
+
 .popover {
     display: none;
     position: absolute;
     background-color: #fff;
+    margin-top: 1em;
     padding-left: 1em;
     border: 1px solid #ccc;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -49,13 +75,20 @@ h1{
 }
 
 .player-selection select {
+    transition: transform 0.3s ease;
     font-size: 1.2em;
     margin: 0 0.5em;
 }
 
+.player-selection select:hover {
+    transform: scale(1.1);
+}
+
 .player-selection button {
+    transition: transform 0.3s ease;
     font-size: 1.2em;
     padding: 0.5em 1em;
+    border-radius: 0.5em;
 }
 
 /* Board style */
@@ -64,9 +97,11 @@ h1{
     justify-content: center;
     margin-top: 2em;
     width: 100%;
+    margin-left: 0.5em;
 }
 table {
-    width: 90%;
+    justify-content: center;
+    width: 100%;
     max-width: 60em;
     height: auto;
     border-collapse: collapse;
@@ -93,8 +128,16 @@ img {
     transition: transform 0.3s ease;
 }
 
-td:hover img {
-    /* transform: rotate(10deg); /* Rotate the card slightly on hover */
+.player-selection button:hover {
+    transform: scale(1.1); /* Rotate the card slightly on hover*/
+}
+
+.rules button:hover {
+    transform: scale(1.1);
+}
+
+.jack button:hover {
+    transform: scale(1.1);
 }
 
 .circle {
@@ -109,4 +152,86 @@ td:hover img {
     left: 50%;
     transform: translate(-50%, -50%);
     pointer-events: none; /* Ensures the circle doesn't interfere with clicks */
+}
+
+@media screen {
+    .circle {
+        width: 40%;
+        max-width: 40px;
+        height: 30%;
+        max-height: 40px;
+        border-radius: 50%;
+        background-color: blue;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        pointer-events: none; /* Ensures the circle doesn't interfere with clicks */
+    }
+    .jack button{
+        transition: transform 0.3s ease;
+        font-size: 1.2em;
+        border-radius: 0.5em;
+    }
+    
+    .rules {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 0em; /* Adjust the spacing below the button */
+        margin-left:1em;
+    }
+    
+    .rules button{
+        transition: transform 0.3s ease;
+        font-size: 1.2em;
+        padding: 0.5em 1em;
+        border-radius: 0.5em;
+    }
+    
+    .popover {
+        display: none;
+        position: absolute;
+        background-color: #fff;
+        border: 2em;
+        padding-left: 1em;
+        border: 1px solid #ccc;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        width: 90%;
+        max-width: 50em;
+        z-index: 1000;
+    }
+
+    h1{
+        font-size: 2em;
+        text-align: center;
+    }
+    .player-selection{
+        margin-top: 1em;
+    }
+
+    .player-selection label{
+        font-size: 1.5em;
+    }
+
+    .player-selection button {
+        transition: transform 0.3s ease;
+        margin-top: 0.5em;
+        font-size: 1.5em;
+    }
+    table{
+        margin-right: 1em;
+    }
+
+    .player-selection button:hover {
+        transform: scale(1.1); /* Rotate the card slightly on hover*/
+    }
+    
+    .rules button:hover {
+        transform: scale(1.1);
+    }
+    
+    .jack button:hover {
+        transform: scale(1.1);
+    }
 }

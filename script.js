@@ -1,3 +1,7 @@
+document.getElementById("rules").addEventListener("click", function() {
+    window.open("https://www.nordicgames.is/wp-content/uploads/2015/06/Sequence_Rules_EN.pdf", "_blank");
+});
+
 document.getElementById('jacks').addEventListener('click', function(event) {
     const popover = document.querySelector('.popover');
     const button = this;

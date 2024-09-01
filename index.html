@@ -1,50 +1,57 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sequence Game</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
     <div class="game">
-        <h1>Sequence Game</h1>
+      <h1>Sequence Game</h1>
 
-         <!-- Player Selection -->
-         <div class="player-selection">
-            <label for="players">Number of Players:</label>
-            <select id="players">
-                <option value="2">2 Players</option>
-                <option value="3">3 Players</option>
-                <option value="4">4 Players</option>
-            </select>
-            <button id="start-game">Start Game</button>
+      <!-- Player Selection -->
+      <div class="player-selection">
+        <label for="players">Number of Players:</label>
+        <select id="players">
+          <option value="2">2 Players</option>
+          <option value="3">3 Players</option>
+          <option value="4">4 Players</option>
+        </select>
+        <button id="start-game">Start Game</button>
+      </div>
+
+      <div class="jack">
+        <button id="jacks">Jacks</button>
+        <div class="popover">
+          <p id="popover-content">
+            The Jacks with TWO EYES are wild. To play a two-eyed Jack, place it
+            on your discard pile and place one of your marker chips on any open
+            space on the game board.
+            <br />
+            The Jacks with ONE EYE are anti-wild. To play a one-eyed Jack, place
+            it on your discard pile and remove one marker chip from the game
+            board belonging to your opponent. That completes your turn.
+            <br />
+            You cannot place one of your marker chips on that same space during
+            this turn. You cannot remove a marker chip that is already part of a
+            completed SEQUENCE. Once a SEQUENCE is achieved by a player or a
+            team, it cannot be broken. You may play either one of the Jacks
+            whenever they work best for your strategy, during your turn.
+          </p>
         </div>
-
-        <div class="jack">
-            <button id="jacks">Info about Jacks</button>
-            <div class="popover">
-                <p id="popover-content"> The Jacks with TWO EYES are wild. To play a two-eyed Jack, place it on your discard pile and place one of
-                    your marker chips on any open space on the game board.
-                    <br>
-                    The Jacks with ONE EYE are anti-wild. To play a one-eyed Jack, place it on your discard pile and remove
-                    one marker chip from the game board belonging to your opponent. That completes your turn. 
-                    <br>
-                    You cannot place one of your marker chips on that same space during this turn. You cannot remove a marker chip that
-                    is already part of a completed SEQUENCE. Once a SEQUENCE is achieved by a player or a team, it cannot
-                    be broken.
-                    You may play either one of the Jacks whenever they work best for your strategy, during your turn. </p>
-                </div>
-            </div>
-
-        <!-- Sidebar for Player Chips -->
-        <div class="sidebar"></div>
-
-        <div class="board">
-            <table>
-                </table>
+        <div class="rules">
+          <button id="rules">Rules</button>
         </div>
     </div>
+
+      <!-- Sidebar for Player Chips -->
+      <div class="sidebar"></div>
+
+      <div class="board">
+        <table></table>
+      </div>
+    </div>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
